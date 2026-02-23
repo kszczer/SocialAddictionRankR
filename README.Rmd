@@ -1,0 +1,90 @@
+---
+title: "SocialMediaAddictionRankR"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%",
+  message = FALSE,
+  warning = FALSE
+)
+```
+# SocialMediaAddictionRankR
+
+Pakiet SocialMediaAddictionRankR to specjalistyczne narzędzie do Wielokryterialnej Analizy Decyzyjnej (MCDA) w środowisku rozmytym, zaprojektowane do badania wpływu mediów społecznościowych na użytkowników.
+
+Umożliwia pełną ścieżkę analityczną: od surowych danych, przez agregację zmiennych ukrytych, aż po zaawansowane rankingi oparte na Trójkątnych Liczbach Rozmytych (TFN).
+
+---
+
+#Instalacja
+Możesz zainstalować wersję deweloperską bezpośrednio z serwisu GitHub:
+```r
+install.packages("devtools")
+devtools::install_github("kszczer/SocialMediaAddictionRankR")
+```
+
+#Szybki Start
+
+Oto podstawowy przykład użycia pakietu z wykorzystaniem wbudowanych danych.
+
+
+#1. Przygotowanie macierzy rozmytej
+Pakiet automatycznie agreguje zmienne surowe i rozmywa je w skali 1-9.
+
+Fragment kodu
+library(SocialMediaAddictionRankR)
+data("mcda_dane_surowe")
+
+# Definicja modelu (składnia wzorowana na SEM)
+skladnia <- "
+  Uzytkowanie =~ avg_daily_usage; 
+  Dobrostan   =~ mental_health + sleep; 
+  Negatywy    =~ addicted_score + conflicts
+"
+
+macierz_rozmyta <- przygotuj_dane_mcda(
+  dane = mcda_dane_surowe,
+  skladnia = skladnia,
+  kolumna_alternatyw = "most_used_platform"
+)
+#2. Wyznaczanie wag (BWM)
+Wyznaczamy wagę każdego kryterium na podstawie preferencji eksperta.
+
+Fragment kodu
+# Dobrostan (najlepsze), Uzytkowanie (najgorsze)
+bwm_b <- c(4, 1, 2)
+bwm_w <- c(1, 4, 3)
+
+wagi_wynik <- oblicz_wagi_bwm(
+  nazwy_kryteriow = c("Uzytkowanie", "Dobrostan", "Negatywy"),
+  najlepsze_do_innych = bwm_b,
+  inne_do_najgorszego = bwm_w
+)
+
+cat("Wskaźnik niespójności CR:", round(wagi_wynik$wskaznik_spojnosci, 4))
+#3. Ranking końcowy (Meta-Ranking)
+Agregujemy wyniki z trzech metod, aby uzyskać najbardziej stabilny ranking platform.
+
+Fragment kodu
+# Kierunki kryteriów: min, max, min
+typy <- c("min", "max", "min")
+
+meta <- rozmyty_meta_ranking(
+  macierz_decyzyjna = macierz_rozmyta,
+  typy_kryteriow = typy,
+  bwm_najlepsze = bwm_b,
+  bwm_najgorsze = bwm_w
+)
+
+# Tabela porównawcza
+knitr::kable(meta$porownanie)
+
+#Dokumentacja
+Pełny poradnik krok-po-kroku dostępny jest w winiecie:
+
+vignette("poradnik_mcda", package = "SocialMediaAddictionRankR")

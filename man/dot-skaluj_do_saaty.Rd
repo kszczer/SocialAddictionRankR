@@ -2,12 +2,13 @@
 % Please edit documentation in R/przygotowanie_danych.R
 \name{.skaluj_do_saaty}
 \alias{.skaluj_do_saaty}
-\title{Wewnętrzny Skaler Saaty'ego}
+\title{Wewnętrzny skaler do skali Saaty'ego (1–9)}
 \usage{
 .skaluj_do_saaty(wektor)
 }
 \description{
-Przekształca dowolną skalę (np. Likert 1-5, wartości ciągłe)
-na skalę Saaty'ego 1-9.
+Przekształca zmienne wejściowe
+(ciągłe lub porządkowe, np. Likert 1–5)
+na skalę porównań Saaty'ego 1–9.
 }
 \keyword{internal}
