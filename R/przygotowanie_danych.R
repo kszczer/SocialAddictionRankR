@@ -178,3 +178,4 @@ przygotuj_dane_mcda <- function(dane,
 
   return(wynik)
 }
+
