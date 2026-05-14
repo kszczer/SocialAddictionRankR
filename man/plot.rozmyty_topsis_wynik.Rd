@@ -14,5 +14,4 @@
 \description{
 Pokazuje odległość od ideału. Oś X: Dystans od Najgorszego (D-).
 Oś Y: Dystans do Najlepszego (D+).
-Cel: Chcemy być w prawym dolnym rogu (Daleko od D-, Blisko D+).
 }

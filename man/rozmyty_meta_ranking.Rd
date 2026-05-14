@@ -2,7 +2,7 @@
 % Please edit documentation in R/meta_ranking.R
 \name{rozmyty_meta_ranking}
 \alias{rozmyty_meta_ranking}
-\title{Rozmyty Meta-Ranking}
+\title{Rozmyty Meta-Ranking (VIKOR & TOPSIS)}
 \usage{
 rozmyty_meta_ranking(
   macierz_decyzyjna,
@@ -10,7 +10,6 @@ rozmyty_meta_ranking(
   wagi = NULL,
   bwm_najlepsze = NULL,
   bwm_najgorsze = NULL,
-  lambda = 0.5,
   v = 0.5
 )
 }
@@ -25,14 +24,12 @@ rozmyty_meta_ranking(
 
 \item{bwm_najgorsze}{(Opcjonalnie) Wektor BWM Others-to-Worst.}
 
-\item{lambda}{Parametr dla WASPAS (domyślnie 0.5).}
-
 \item{v}{Parametr dla VIKOR (domyślnie 0.5).}
 }
 \value{
 Lista zawierająca ramkę danych z porównaniem rankingów oraz macierz korelacji.
 }
 \description{
-Agreguje wyniki z metod Fuzzy VIKOR, TOPSIS i WASPAS, aby stworzyć
+Agreguje wyniki z metod Fuzzy VIKOR oraz TOPSIS, aby stworzyć
 jeden, robustny ranking konsensusu.
 }

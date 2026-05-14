@@ -6,7 +6,7 @@
 #' Dane obejmują platformy: Facebook, TikTok, Instagram oraz WhatsApp.
 #' Przeznaczony do testowania metod MCDA (Multi-Criteria Decision Analysis).
 #'
-#' @format Ramka danych (data frame) z 560 wierszami i 7 zmiennymi:
+#' @format Ramka danych (data frame) z 200 wierszami i 7 zmiennymi:
 #' \describe{
 #'   \item{studentID}{Unikalny identyfikator studenta}
 #'   \item{most_used_platform}{Główna używana platforma (Alternatywa w MCDA)}

@@ -5,7 +5,7 @@
 \alias{social_media_data}
 \title{Dane dotyczące użycia mediów społecznościowych przez studentów (MCDA)}
 \format{
-Ramka danych (data frame) z 560 wierszami i 7 zmiennymi:
+Ramka danych (data frame) z 200 wierszami i 7 zmiennymi:
 \describe{
   \item{studentID}{Unikalny identyfikator studenta}
   \item{most_used_platform}{Główna używana platforma (Alternatywa w MCDA)}

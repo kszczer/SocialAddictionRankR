@@ -54,7 +54,7 @@ meta_wynik <- rozmyty_meta_ranking(
 )
 knitr::kable(
   meta_wynik$porownanie, 
-  caption = "Zestawienie Rankingów: Konsensus metod TOPSIS, VIKOR i WASPAS"
+  caption = "Zestawienie Rankingów: Konsensus metod TOPSIS i VIKOR"
 )
 
 knitr::kable(

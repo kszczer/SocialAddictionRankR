@@ -2,22 +2,20 @@
 % Please edit documentation in R/meta_ranking.R
 \name{.oblicz_ranking_dominacji}
 \alias{.oblicz_ranking_dominacji}
-\title{Teoria Dominacji dla Rankingu}
+\title{Teoria Dominacji dla Rankingu (VIKOR & TOPSIS)}
 \usage{
-.oblicz_ranking_dominacji(r1, r2, r3)
+.oblicz_ranking_dominacji(r1, r2)
 }
 \arguments{
 \item{r1}{Wektor numeryczny rang metody 1.}
 
 \item{r2}{Wektor numeryczny rang metody 2.}
-
-\item{r3}{Wektor numeryczny rang metody 3.}
 }
 \value{
 Wektor numeryczny z finalnym rankingiem.
 }
 \description{
-Funkcja pomocnicza. Wyznacza ranking konsensusu na podstawie reguły większości.
+Funkcja pomocnicza. Wyznacza ranking konsensusu na podstawie reguły większości dla dwóch metod.
 Iteracyjnie sprawdza, która alternatywa najczęściej wygrywa na danej pozycji.
 }
 \keyword{internal}
