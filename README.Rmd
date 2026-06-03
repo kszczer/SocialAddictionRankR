@@ -13,14 +13,14 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 ```
-# SocialAddictionRankR
 
 Pakiet SocialAddictionRankR to specjalistyczne narzędzie do wielokryterialnej analizy decyzyjnej (MCDA) w środowisku rozmytym, zaprojektowane do badania wpływu mediów społecznościowych na użytkowników.
 
 Umożliwia realizację pełnej ścieżki analitycznej: od surowych danych, przez agregację zmiennych ukrytych, aż po zaawansowane rankingi oparte na trójkątnych liczbach rozmytych (TFN).
 ---
 
-#Instalacja
+# Instalacja
+
 Możesz zainstalować wersję deweloperską bezpośrednio z serwisu GitHub:
   
 ```{r}
@@ -33,12 +33,12 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 devtools::install_github("kszczer/SocialAddictionRankR")
 ```
 
-#Szybki Start
+# Szybki Start
 
 Oto podstawowy przykład użycia pakietu z wykorzystaniem wbudowanych danych.
 
 
-#1. Przygotowanie macierzy rozmytej
+## 1. Przygotowanie macierzy rozmytej
 Pakiet automatycznie agreguje zmienne surowe i rozmywa je w skali 1-9.
 
 ```{r}
@@ -59,7 +59,7 @@ macierz_rozmyta <- przygotuj_dane_mcda(
 )
 ```
 
-#2. Wyznaczanie wag (Metoda BWM)
+## 2. Wyznaczanie wag (Metoda BWM)
 Wyznaczamy wagę każdego kryterium na podstawie preferencji eksperta.
 
 ```{r}
@@ -76,9 +76,35 @@ wagi_sm <- oblicz_wagi_bwm(
 )
 ```
 
-#3. Ranking końcowy (Meta-Ranking)
+## 3. Analiza wielokryterialna metodą Fuzzy VIKOR
+Uruchamiamy klasyczny algorytm VIKOR w środowisku rozmytym, który optymalizuje model pod kątem maksymalnej użyteczności grupowej oraz minimalnego indywidualnego żalu.
 
-Agregujemy wyniki z trzech metod, aby uzyskać najbardziej stabilny ranking platform.
+```{r}
+wynik_vikor <- rozmyty_vikor(
+  macierz_decyzyjna = macierz_rozmyta,
+  typy_kryteriow = typy,
+  bwm_najlepsze = bwm_best,
+  bwm_najgorsze = bwm_worst
+)
+```
+## 4. Analiza wielokryterialna metodą Fuzzy TOPSIS
+
+Równolegle wyznaczamy pozycje platform za pomocą metody TOPSIS, obliczając współczynniki bliskości do rozwiązania idealnego. 
+
+# Definicja typów kryteriów (min = koszt/negatywne, max = zysk/pozytywne)
+typy <- c("min", "max", "min")
+```{R}
+wynik_topsis <- rozmyty_topsis(
+  macierz_decyzyjna = macierz_rozmyta,
+  typy_kryteriow = typy,
+  bwm_najlepsze = bwm_best,
+  bwm_najgorsze = bwm_worst
+)
+```
+
+## 5. Synteza i Meta-Ranking
+
+Agregujemy wyniki z dwóch metod, aby uzyskać najbardziej stabilny ranking platform.
 
 ```{r}
 typy <- c("min", "max", "min")
@@ -90,15 +116,28 @@ meta_wynik <- rozmyty_meta_ranking(
   bwm_najgorsze = bwm_worst
 )
 ```
+## 6. Wizualizacje i wyniki końcowe
 
-# Tabela porównawcza
-knitr::kable(meta_wynik$porownanie, caption = "Zestawienie wyników i ostateczny Meta-Ranking")
+W tym kroku zestawiamy finalne wyniki rankingów oraz przedstawiamy je w formie graficznej. Dzięki integracji metod analitycznych możemy zweryfikować stabilność uzyskanych pozycji na mapie strategicznej VIKOR i mapie efektywności TOPSIS.
+```{r}
+# Generowanie Mapy Strategicznej VIKOR
+plot(meta_wynik$detale_vikor)
 
-#Dokumentacja
+# Generowanie Mapy Efektywności TOPSIS
+plot(meta_wynik$detale_topsis)
 
-Pełny poradnik krok-po-kroku dostępny jest w winiecie pakietu:
-```r
-vignette("poradnik_mcda", package = "SocialMediaAddictionRankR")
+knitr::kable(
+  meta_wynik$porownanie, 
+  caption = "Tabela zbiorcza: Porównanie rang Fuzzy TOPSIS, Fuzzy VIKOR oraz ostateczny Meta-Ranking"
+)
+```
+
+# Dokumentacja
+
+Pełny opis matematyczny zaimplementowanych metod, instrukcja generowania dedykowanych wykresów diagnostycznych oraz automatycznych raportów w standardzie edytorskim APA (funkcja tabela_apa()) znajdują się w oficjalnej winiecie pakietu: 
+
+```{r}
+vignette("poradnik_mcda", package = "SocialAddictionRankR")
 ```
 
 

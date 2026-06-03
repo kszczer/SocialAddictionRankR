@@ -87,11 +87,10 @@ wynik_vikor <- rozmyty_vikor(
 Równolegle wyznaczamy pozycje platform za pomocą metody TOPSIS,
 obliczając współczynniki bliskości do rozwiązania idealnego.
 
-# Definicja typów kryteriów (min = koszt/negatywne, max = zysk/pozytywne)
-
-typy \<- c(“min”, “max”, “min”)
-
 ``` r
+
+# Definicja typów kryteriów (min = koszt/negatywne, max = zysk/pozytywne)
+typy <- c("min", "max", "min")
 wynik_topsis <- rozmyty_topsis(
   macierz_decyzyjna = macierz_rozmyta,
   typy_kryteriow = typy,
@@ -126,19 +125,9 @@ i mapie efektywności TOPSIS.
 ``` r
 # Generowanie Mapy Strategicznej VIKOR
 plot(meta_wynik$detale_vikor)
-```
-
-<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" />
-
-``` r
 
 # Generowanie Mapy Efektywności TOPSIS
 plot(meta_wynik$detale_topsis)
-```
-
-<img src="man/figures/README-unnamed-chunk-7-2.png" alt="" width="100%" />
-
-``` r
 
 knitr::kable(
   meta_wynik$porownanie, 
