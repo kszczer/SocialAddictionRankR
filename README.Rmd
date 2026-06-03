@@ -91,9 +91,10 @@ wynik_vikor <- rozmyty_vikor(
 
 Równolegle wyznaczamy pozycje platform za pomocą metody TOPSIS, obliczając współczynniki bliskości do rozwiązania idealnego. 
 
+```{R}
+
 # Definicja typów kryteriów (min = koszt/negatywne, max = zysk/pozytywne)
 typy <- c("min", "max", "min")
-```{R}
 wynik_topsis <- rozmyty_topsis(
   macierz_decyzyjna = macierz_rozmyta,
   typy_kryteriow = typy,
@@ -119,6 +120,7 @@ meta_wynik <- rozmyty_meta_ranking(
 ## 6. Wizualizacje i wyniki końcowe
 
 W tym kroku zestawiamy finalne wyniki rankingów oraz przedstawiamy je w formie graficznej. Dzięki integracji metod analitycznych możemy zweryfikować stabilność uzyskanych pozycji na mapie strategicznej VIKOR i mapie efektywności TOPSIS.
+
 ```{r}
 # Generowanie Mapy Strategicznej VIKOR
 plot(meta_wynik$detale_vikor)

@@ -6,7 +6,7 @@ wielokryterialnej analizy decyzyjnej (MCDA) w środowisku rozmytym,
 zaprojektowane do badania wpływu mediów społecznościowych na
 użytkowników.
 
-## Umożliwia realizację pełnej ścieżki analitycznej: od surowych danych, przez agregację zmiennych ukrytych, aż po zaawansowane rankingi oparte na trójkątnych liczbach rozmytych (TFN).
+Umożliwia realizację pełnej ścieżki analitycznej: od surowych danych, przez agregację zmiennych ukrytych, aż po zaawansowane rankingi oparte na trójkątnych liczbach rozmytych (TFN).
 
 # Instalacja
 
