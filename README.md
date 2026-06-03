@@ -1,8 +1,6 @@
 SocialAddictionRankR
 ================
 
-# SocialAddictionRankR
-
 Pakiet SocialAddictionRankR to specjalistyczne narzędzie do
 wielokryterialnej analizy decyzyjnej (MCDA) w środowisku rozmytym,
 zaprojektowane do badania wpływu mediów społecznościowych na
@@ -10,8 +8,9 @@ użytkowników.
 
 ## Umożliwia realizację pełnej ścieżki analitycznej: od surowych danych, przez agregację zmiennych ukrytych, aż po zaawansowane rankingi oparte na trójkątnych liczbach rozmytych (TFN).
 
-\#Instalacja Możesz zainstalować wersję deweloperską bezpośrednio z
-serwisu GitHub:
+# Instalacja
+
+Możesz zainstalować wersję deweloperską bezpośrednio z serwisu GitHub:
 
 ``` r
 # Instalacja narzędzi deweloperskich (jeśli nie są zainstalowane)
@@ -21,39 +20,16 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 
 # Instalacja pakietu
 devtools::install_github("kszczer/SocialAddictionRankR")
-#> xfun       (0.57     -> 0.58  ) [CRAN]
-#> openssl    (2.4.0    -> 2.4.1 ) [CRAN]
-#> gdtools    (0.5.0    -> 0.5.1 ) [CRAN]
-#> data.table (1.18.2.1 -> 1.18.4) [CRAN]
-#> package 'xfun' successfully unpacked and MD5 sums checked
-#> package 'openssl' successfully unpacked and MD5 sums checked
-#> package 'gdtools' successfully unpacked and MD5 sums checked
-#> package 'data.table' successfully unpacked and MD5 sums checked
-#> 
-#> Pobrane pakiety binarne są w
-#>  C:\Users\Użytkownik\AppData\Local\Temp\RtmpcHsqup\downloaded_packages
-#> ── R CMD build ─────────────────────────────────────────────────────────────────
-#>          checking for file 'C:\Users\Użytkownik\AppData\Local\Temp\RtmpcHsqup\remotesc3a82d604e34\kszczer-SocialAddictionRankR-672c1fa/DESCRIPTION' ...     checking for file 'C:\Users\Użytkownik\AppData\Local\Temp\RtmpcHsqup\remotesc3a82d604e34\kszczer-SocialAddictionRankR-672c1fa/DESCRIPTION' ...   ✔  checking for file 'C:\Users\Użytkownik\AppData\Local\Temp\RtmpcHsqup\remotesc3a82d604e34\kszczer-SocialAddictionRankR-672c1fa/DESCRIPTION' (824ms)
-#>       ─  preparing 'SocialMediaAddictionRankR':
-#>    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   ✔  checking DESCRIPTION meta-information
-#>   Ostrzeżenie:     Ostrzeżenie: C:/Users/Użytkownik/AppData/Local/Temp/Rtmp2BPEZO/Rbuildb3a479663ca4/SocialMediaAddictionRankR/man/rozmyty_topsis.Rd:26: unknown macro '\times'
-#>   Ostrzeżenie:     Ostrzeżenie: C:/Users/Użytkownik/AppData/Local/Temp/Rtmp2BPEZO/Rbuildb3a479663ca4/SocialMediaAddictionRankR/man/rozmyty_vikor.Rd:28: unknown macro '\times'
-#>       ─  checking for LF line-endings in source and make files and shell scripts (416ms)
-#>       ─  checking for empty or unneeded directories
-#>   Ostrzeżenie:     Ostrzeżenie: C:/Users/Użytkownik/AppData/Local/Temp/Rtmp2BPEZO/Rbuildb3a479663ca4/SocialMediaAddictionRankR/man/rozmyty_topsis.Rd:26: unknown macro '\times'
-#>   Ostrzeżenie:     Ostrzeżenie: C:/Users/Użytkownik/AppData/Local/Temp/Rtmp2BPEZO/Rbuildb3a479663ca4/SocialMediaAddictionRankR/man/rozmyty_vikor.Rd:28: unknown macro '\times'
-#>       ─  building 'SocialMediaAddictionRankR_0.1.0.tar.gz'
-#>      
-#> 
 ```
 
-\#Szybki Start
+# Szybki Start
 
 Oto podstawowy przykład użycia pakietu z wykorzystaniem wbudowanych
 danych.
 
-\#1. Przygotowanie macierzy rozmytej Pakiet automatycznie agreguje
-zmienne surowe i rozmywa je w skali 1-9.
+## 1. Przygotowanie macierzy rozmytej
+
+Pakiet automatycznie agreguje zmienne surowe i rozmywa je w skali 1-9.
 
 ``` r
 library(SocialAddictionRankR)
@@ -73,8 +49,9 @@ macierz_rozmyta <- przygotuj_dane_mcda(
 )
 ```
 
-\#2. Wyznaczanie wag (Metoda BWM) Wyznaczamy wagę każdego kryterium na
-podstawie preferencji eksperta.
+## 2. Wyznaczanie wag (Metoda BWM)
+
+Wyznaczamy wagę każdego kryterium na podstawie preferencji eksperta.
 
 ``` r
 nazwy <- c("Uzytkowanie", "Dobrostan", "Negatywy")
@@ -90,9 +67,42 @@ wagi_sm <- oblicz_wagi_bwm(
 )
 ```
 
-\#3. Ranking końcowy (Meta-Ranking)
+## 3. Analiza wielokryterialna metodą Fuzzy VIKOR
 
-Agregujemy wyniki z trzech metod, aby uzyskać najbardziej stabilny
+Uruchamiamy klasyczny algorytm VIKOR w środowisku rozmytym, który
+optymalizuje model pod kątem maksymalnej użyteczności grupowej oraz
+minimalnego indywidualnego żalu.
+
+``` r
+wynik_vikor <- rozmyty_vikor(
+  macierz_decyzyjna = macierz_rozmyta,
+  typy_kryteriow = typy,
+  bwm_najlepsze = bwm_best,
+  bwm_najgorsze = bwm_worst
+)
+```
+
+## 4. Analiza wielokryterialna metodą Fuzzy TOPSIS
+
+Równolegle wyznaczamy pozycje platform za pomocą metody TOPSIS,
+obliczając współczynniki bliskości do rozwiązania idealnego.
+
+# Definicja typów kryteriów (min = koszt/negatywne, max = zysk/pozytywne)
+
+typy \<- c(“min”, “max”, “min”)
+
+``` r
+wynik_topsis <- rozmyty_topsis(
+  macierz_decyzyjna = macierz_rozmyta,
+  typy_kryteriow = typy,
+  bwm_najlepsze = bwm_best,
+  bwm_najgorsze = bwm_worst
+)
+```
+
+## 5. Synteza i Meta-Ranking
+
+Agregujemy wyniki z dwóch metod, aby uzyskać najbardziej stabilny
 ranking platform.
 
 ``` r
@@ -106,15 +116,53 @@ meta_wynik <- rozmyty_meta_ranking(
 )
 ```
 
-# Tabela porównawcza
+## 6. Wizualizacje i wyniki końcowe
 
-knitr::kable(meta_wynik\$porownanie, caption = “Zestawienie wyników i
-ostateczny Meta-Ranking”)
-
-\#Dokumentacja
-
-Pełny poradnik krok-po-kroku dostępny jest w winiecie pakietu:
+W tym kroku zestawiamy finalne wyniki rankingów oraz przedstawiamy je w
+formie graficznej. Dzięki integracji metod analitycznych możemy
+zweryfikować stabilność uzyskanych pozycji na mapie strategicznej VIKOR
+i mapie efektywności TOPSIS.
 
 ``` r
-vignette("poradnik_mcda", package = "SocialMediaAddictionRankR")
+# Generowanie Mapy Strategicznej VIKOR
+plot(meta_wynik$detale_vikor)
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" />
+
+``` r
+
+# Generowanie Mapy Efektywności TOPSIS
+plot(meta_wynik$detale_topsis)
+```
+
+<img src="man/figures/README-unnamed-chunk-7-2.png" alt="" width="100%" />
+
+``` r
+
+knitr::kable(
+  meta_wynik$porownanie, 
+  caption = "Tabela zbiorcza: Porównanie rang Fuzzy TOPSIS, Fuzzy VIKOR oraz ostateczny Meta-Ranking"
+)
+```
+
+| Alternatywa | R_VIKOR | R_TOPSIS | Meta_Suma | Meta_Dominacja | Meta_Agregacja |
+|:------------|--------:|---------:|----------:|---------------:|---------------:|
+| Facebook    |       1 |        1 |         1 |              1 |              1 |
+| Instagram   |       2 |        2 |         2 |              2 |              2 |
+| TikTok      |       3 |        3 |         3 |              3 |              3 |
+| WhatsApp    |       4 |        4 |         4 |              4 |              4 |
+
+Tabela zbiorcza: Porównanie rang Fuzzy TOPSIS, Fuzzy VIKOR oraz
+ostateczny Meta-Ranking
+
+# Dokumentacja
+
+Pełny opis matematyczny zaimplementowanych metod, instrukcja generowania
+dedykowanych wykresów diagnostycznych oraz automatycznych raportów w
+standardzie edytorskim APA (funkcja tabela_apa()) znajdują się w
+oficjalnej winiecie pakietu:
+
+``` r
+vignette("poradnik_mcda", package = "SocialAddictionRankR")
 ```

@@ -11,7 +11,8 @@ knitr::opts_chunk$set(
   out.width = "100%",
   message = FALSE,
   warning = FALSE
-) ```
+)
+```
 # SocialAddictionRankR
 
 Pakiet SocialAddictionRankR to specjalistyczne narzędzie do wielokryterialnej analizy decyzyjnej (MCDA) w środowisku rozmytym, zaprojektowane do badania wpływu mediów społecznościowych na użytkowników.
@@ -22,7 +23,7 @@ Umożliwia realizację pełnej ścieżki analitycznej: od surowych danych, przez
 #Instalacja
 Możesz zainstalować wersję deweloperską bezpośrednio z serwisu GitHub:
   
-  ```r
+```{r}
 # Instalacja narzędzi deweloperskich (jeśli nie są zainstalowane)
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
@@ -39,9 +40,10 @@ Oto podstawowy przykład użycia pakietu z wykorzystaniem wbudowanych danych.
 
 #1. Przygotowanie macierzy rozmytej
 Pakiet automatycznie agreguje zmienne surowe i rozmywa je w skali 1-9.
- ```r
-library(SocialMediaAddictionRankR)
-data("mcda_dane_surowe")
+
+```{r}
+library(SocialAddictionRankR)
+data("social_media_data")
 
 # Definicja modelu (składnia wzorowana na SEM)
 skladnia <- "
@@ -51,7 +53,7 @@ skladnia <- "
 "
 
 macierz_rozmyta <- przygotuj_dane_mcda(
-  dane = mcda_dane_surowe,
+  dane = social_media_data,
   skladnia = skladnia,
   kolumna_alternatyw = "most_used_platform"
 )
@@ -60,10 +62,12 @@ macierz_rozmyta <- przygotuj_dane_mcda(
 #2. Wyznaczanie wag (Metoda BWM)
 Wyznaczamy wagę każdego kryterium na podstawie preferencji eksperta.
 
-```r
+```{r}
+nazwy <- c("Uzytkowanie", "Dobrostan", "Negatywy")
+
 # Dobrostan (najlepsze), Uzytkowanie (najgorsze)
-bwm_b <- c(4, 1, 2)
-bwm_w <- c(1, 4, 3)
+bwm_best <- c(4, 1, 2)
+bwm_worst <- c(1, 4, 3)
 
 wagi_sm <- oblicz_wagi_bwm(
   nazwy_kryteriow = nazwy,
@@ -76,19 +80,17 @@ wagi_sm <- oblicz_wagi_bwm(
 
 Agregujemy wyniki z trzech metod, aby uzyskać najbardziej stabilny ranking platform.
 
-```r
-# Kierunki kryteriów: min, max, min
+```{r}
 typy <- c("min", "max", "min")
 
-# Uruchomienie zintegrowanego silnika obliczeniowego
 meta_wynik <- rozmyty_meta_ranking(
   macierz_decyzyjna = macierz_rozmyta,
   typy_kryteriow = typy,
   bwm_najlepsze = bwm_best,
   bwm_najgorsze = bwm_worst
 )
-)
 ```
+
 # Tabela porównawcza
 knitr::kable(meta_wynik$porownanie, caption = "Zestawienie wyników i ostateczny Meta-Ranking")
 
@@ -98,3 +100,5 @@ Pełny poradnik krok-po-kroku dostępny jest w winiecie pakietu:
 ```r
 vignette("poradnik_mcda", package = "SocialMediaAddictionRankR")
 ```
+
+
