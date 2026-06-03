@@ -15,19 +15,6 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 
 # Instalacja pakietu
 devtools::install_github("kszczer/SocialAddictionRankR")
-#> ── R CMD build ──────────────────────────────────────────────────────────
-#>          checking for file 'C:\Users\Użytkownik\AppData\Local\Temp\Rtmpsdbyfy\remotes786069442221\kszczer-SocialAddictionRankR-c74ce0e/DESCRIPTION' ...  ✔  checking for file 'C:\Users\Użytkownik\AppData\Local\Temp\Rtmpsdbyfy\remotes786069442221\kszczer-SocialAddictionRankR-c74ce0e/DESCRIPTION' (509ms)
-#>       ─  preparing 'SocialAddictionRankR':
-#>    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   ✔  checking DESCRIPTION meta-information
-#>   Ostrzeżenie:     Ostrzeżenie: C:/Users/Użytkownik/AppData/Local/Temp/RtmpQ3VMA5/Rbuild9708650c10c5/SocialAddictionRankR/man/rozmyty_topsis.Rd:26: unknown macro '\times'
-#>   Ostrzeżenie:     Ostrzeżenie: C:/Users/Użytkownik/AppData/Local/Temp/RtmpQ3VMA5/Rbuild9708650c10c5/SocialAddictionRankR/man/rozmyty_vikor.Rd:28: unknown macro '\times'
-#>       ─  checking for LF line-endings in source and make files and shell scripts
-#>   ─  checking for empty or unneeded directories
-#>   Ostrzeżenie:     Ostrzeżenie: C:/Users/Użytkownik/AppData/Local/Temp/RtmpQ3VMA5/Rbuild9708650c10c5/SocialAddictionRankR/man/rozmyty_topsis.Rd:26: unknown macro '\times'
-#>   Ostrzeżenie:     Ostrzeżenie: C:/Users/Użytkownik/AppData/Local/Temp/RtmpQ3VMA5/Rbuild9708650c10c5/SocialAddictionRankR/man/rozmyty_vikor.Rd:28: unknown macro '\times'
-#>       ─  building 'SocialAddictionRankR_0.1.0.tar.gz'
-#>      
-#> 
 ```
 
 # Szybki Start
