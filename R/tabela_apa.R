@@ -1,67 +1,67 @@
-#' @title Generowanie Tabeli APA (VIKOR i TOPSIS)
-#' @description
-#' Funkcja przekształca wyniki analizy MCDA (TOPSIS, VIKOR, Meta-Ranking)
-#' w sformatowaną tabelę zgodną ze standardem APA, gotową do publikacji w Wordzie.
+#' Generowanie tabeli w standardzie APA
 #'
-#' @param x Obiekt wynikowy z funkcji pakietu (np. `rozmyty_topsis_wynik`).
-#' @param tytul Opcjonalny tytuł tabeli.
-#' @return Obiekt klasy `flextable` gotowy do druku lub zapisu do Worda.
-#' @importFrom rempsyc nice_table
-#' @importFrom flextable autofit save_as_docx
+#' @description Konwertuje wyniki zbiorcze z procedury rozmytego meta-rankingu
+#' do sformatowanej tabeli zgodnej z wymogami manuala APA (7th edition), wzorem z pracy
+#' oraz czcionką Times New Roman.
+#'
+#' @param meta_wynik Obiekt listy zwracany przez funkcję `rozmyty_meta_ranking`.
+#' @return Obiekt klasy `flextable` sformatowany zgodnie z zasadami APA.
+#' @importFrom flextable flextable theme_apa autofit add_footer_lines align as_paragraph as_chunk font
+#' @importFrom officer fp_text
 #' @export
-tabela_apa <- function(x, tytul = NULL) {
-  UseMethod("tabela_apa")
-}
+tabela_apa <- function(meta_wynik) {
 
-#' @export
-tabela_apa.rozmyty_topsis_wynik <- function(x, tytul = "Wyniki metody Fuzzy TOPSIS") {
-  df <- x$wyniki
+  if (is.null(meta_wynik$porownanie)) {
+    stop("Przekazany obiekt nie zawiera ramki '$porownanie'.")
+  }
 
-  # Formatowanie nazw kolumn dla czytelnika
-  names(df) <- c("Alternatywa", "D+ (Do Idealu)", "D- (Od Anty)", "Wynik (CC)", "Ranking")
+  # Pobranie danych do tabeli
+  dane_tab <- meta_wynik$porownanie
 
-  # Zaokrąglenia
-  df$`D+ (Do Idealu)` <- round(df$`D+ (Do Idealu)`, 3)
-  df$`D- (Od Anty)` <- round(df$`D- (Od Anty)`, 3)
-  df$`Wynik (CC)` <- round(df$`Wynik (CC)`, 4)
-
-  # Tworzenie tabeli
-  rempsyc::nice_table(
-    df,
-    title = c("Tabela 1", tytul),
-    note = c("Uwaga. CC - Coefficient of Closeness. Im wyższa wartość, tym lepsza alternatywa.")
+  # Mapowanie nazw kolumn z kodu źródłowego na dokładne nazwy z Twojego obrazka
+  nowe_nazwy <- c(
+    "Alternatywa"     = "Alternatywa",
+    "Ranking_VIKOR"   = "R VIKOR",
+    "Ranking_TOPSIS"  = "R TOPSIS",
+    "Meta_Suma"       = "Meta Suma",
+    "Meta_Dominacja"  = "Meta Dominacja",
+    "Meta_Agregacja"  = "Meta Agregacja"
   )
-}
 
-#' @export
-tabela_apa.rozmyty_vikor_wynik <- function(x, tytul = "Wyniki metody Fuzzy VIKOR") {
-  df <- x$wyniki
+  # Automatyczne dopasowanie nazw istniejących kolumn
+  istniejace_kolumny <- names(dane_tab)
+  for (i in seq_along(istniejace_kolumny)) {
+    stara_nazwa <- istniejace_kolumny[i]
+    if (stara_nazwa %in% names(nowe_nazwy)) {
+      names(dane_tab)[i] <- nowe_nazwy[stara_nazwa]
+    }
+  }
 
-  names(df) <- c("Alternatywa", "S (Grupa)", "R (Zal)", "Q (Kompromis)", "Ranking")
+  # Tworzenie obiektu flextable
+  tab_flextable <- flextable::flextable(dane_tab)
 
-  df$`S (Grupa)` <- round(df$`S (Grupa)`, 3)
-  df$`R (Zal)` <- round(df$`R (Zal)`, 3)
-  df$`Q (Kompromis)` <- round(df$`Q (Kompromis)`, 4)
+  # Nałożenie standardowego, czystego motywu APA (linie poziome góra/dół)
+  tab_flextable <- flextable::theme_apa(tab_flextable)
 
-  rempsyc::nice_table(
-    df,
-    title = c("Tabela 2", tytul),
-    note = c("Uwaga. S: użyteczność grupy, R: indywidualny żal, Q: indeks kompromisu (im mniej tym lepiej).")
+  # Wyrównanie zawartości do środka dla kolumn numerycznych (oprócz pierwszej)
+  tab_flextable <- flextable::align(tab_flextable, j = 2:ncol(dane_tab), align = "center", part = "all")
+  tab_flextable <- flextable::align(tab_flextable, j = 1, align = "left", part = "all")
+
+  # Dodanie podpisu pod dolną linią: "Note." kursywą, reszta zwykłym tekstem
+  # W fp_text również definiujemy Times New Roman dla spójności notatki
+  tab_flextable <- flextable::add_footer_lines(
+    tab_flextable,
+    values = flextable::as_paragraph(
+      flextable::as_chunk("Note. ", props = officer::fp_text(italic = TRUE, font.family = "Times New Roman")),
+      flextable::as_chunk("Zestawienie rang uzyskanych metodami Fuzzy VIKOR i Fuzzy TOPSIS oraz ostateczny ranking konsensusu (Meta).", props = officer::fp_text(font.family = "Times New Roman"))
+    )
   )
-}
 
-#' @export
-tabela_apa.list <- function(x, tytul = "Meta-Ranking (Zestawienie VIKOR i TOPSIS)") {
-  # Obsługa Meta-Rankingu
-  if(is.null(x$porownanie)) stop("To nie jest obiekt meta-rankingu.")
+  # Ustawienie czcionki Times New Roman dla całej tabeli (nagłówki, body, stopka)
+  tab_flextable <- flextable::font(tab_flextable, fontname = "Times New Roman", part = "all")
 
-  df <- x$porownanie
+  # Automatyczne dopasowanie szerokości kolumn do tekstu
+  tab_flextable <- flextable::autofit(tab_flextable)
 
-  # Usuwamy "podłogi" z nazw kolumn (np. R_VIKOR -> R VIKOR)
-  names(df) <- gsub("_", " ", names(df))
-
-  rempsyc::nice_table(
-    df,
-    note = c("Zestawienie rang uzyskanych metodami Fuzzy VIKOR i Fuzzy TOPSIS oraz ostateczny ranking konsensusu (Meta).")
-  )
+  return(tab_flextable)
 }

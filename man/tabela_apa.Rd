@@ -2,19 +2,18 @@
 % Please edit documentation in R/tabela_apa.R
 \name{tabela_apa}
 \alias{tabela_apa}
-\title{Generowanie Tabeli APA (VIKOR i TOPSIS)}
+\title{Generowanie tabeli w standardzie APA}
 \usage{
-tabela_apa(x, tytul = NULL)
+tabela_apa(meta_wynik)
 }
 \arguments{
-\item{x}{Obiekt wynikowy z funkcji pakietu (np. `rozmyty_topsis_wynik`).}
-
-\item{tytul}{Opcjonalny tytuł tabeli.}
+\item{meta_wynik}{Obiekt listy zwracany przez funkcję `rozmyty_meta_ranking`.}
 }
 \value{
-Obiekt klasy `flextable` gotowy do druku lub zapisu do Worda.
+Obiekt klasy `flextable` sformatowany zgodnie z zasadami APA.
 }
 \description{
-Funkcja przekształca wyniki analizy MCDA (TOPSIS, VIKOR, Meta-Ranking)
-w sformatowaną tabelę zgodną ze standardem APA, gotową do publikacji w Wordzie.
+Konwertuje wyniki zbiorcze z procedury rozmytego meta-rankingu
+do sformatowanej tabeli zgodnej z wymogami manuala APA (7th edition), wzorem z pracy
+oraz czcionką Times New Roman.
 }

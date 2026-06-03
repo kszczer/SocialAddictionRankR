@@ -12,13 +12,33 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+# Wczytywanie 
+library(SocialAddictionRankR)
 data("social_media_data")
-head(social_media_data)
 
+# Definicja struktury kryteriów
 skladnia_modelu <- "
   Uzytkowanie =~ avg_daily_usage; 
-  Dobrostan   =~ mental_health + sleep; 
-  Negatywy    =~ addicted_score + conflicts
+  Dobrostan   =~ mental_health + sleep;   Negatywy    =~ addicted_score + conflicts
+"
+
+# Automatyczna transformacja do postaci rozmytej (TFN)
+macierz_rozmyta <- przygotuj_dane_mcda(
+  dane = social_media_data,
+  skladnia = skladnia_modelu,
+  kolumna_alternatyw = "most_used_platform"
+)
+
+# Podgląd przetworzonej macierzy
+knitr::kable(head(macierz_rozmyta, 5))
+
+# Podgląd struktury surowych danych
+head(social_media_data)
+
+# Definiowanie modelu i agregacja rozmyta
+skladnia_modelu <- "
+  Uzytkowanie =~ avg_daily_usage; 
+  Dobrostan   =~ mental_health + sleep;   Negatywy    =~ addicted_score + conflicts
 "
 
 macierz_rozmyta <- przygotuj_dane_mcda(
@@ -28,66 +48,37 @@ macierz_rozmyta <- przygotuj_dane_mcda(
 )
 
 # Podgląd przetworzonych danych
-knitr::kable(head(macierz_rozmyta, 5))
+knitr::kable(head(macierz_rozmyta, 5), caption = "Zagregowana rozmyta macierz decyzyjna (fragment)")
 
-# Wektory porównań (Uzytkowanie, Dobrostan, Negatywy)
-bwm_best <- c(4, 1, 2)  # Dobrostan (2. pozycja) jest Najlepszy
-bwm_worst <- c(1, 4, 3) # Uzytkowanie (1. pozycja) jest Najgorsze
+# Wektory porównań (Kryteria: Uzytkowanie, Dobrostan, Negatywy)
+# Dobrostan (poz. 2) uznano za najlepszy, Uzytkowanie (poz. 1) za najgorszy
+nazwy <- c("Uzytkowanie", "Dobrostan", "Negatywy") 
+bwm_best <- c(4, 1, 2)  
+bwm_worst <- c(1, 4, 3) 
 
 wagi_sm <- oblicz_wagi_bwm(
-  dane = macierz_rozmyta, # jeśli funkcja tego wymaga
+  nazwy_kryteriow = nazwy,
   najlepsze_do_innych = bwm_best,
   inne_do_najgorszego = bwm_worst
 )
 
-cat("Wskaźnik spójności (CR):", round(wagi_sm$wskaznik_spojnosci, 4))
-
-# Typy: min dla czasu i negatywów, max dla dobrostanu
+# Definicja typów kryteriów (min = koszt, max = zysk)
 typy <- c("min", "max", "min")
 
+# Uruchomienie zintegrowanego silnika obliczeniowego
 meta_wynik <- rozmyty_meta_ranking(
   macierz_decyzyjna = macierz_rozmyta,
   typy_kryteriow = typy,
   bwm_najlepsze = bwm_best,
-  bwm_najgorsze = bwm_worst,
-  v = 0.5
+  bwm_najgorsze = bwm_worst
 )
-knitr::kable(
-  meta_wynik$porownanie, 
-  caption = "Zestawienie Rankingów: Konsensus metod TOPSIS i VIKOR"
-)
+korelacje <- meta_wynik$korelacje
 
-knitr::kable(
-  round(meta_wynik$korelacje, 3), 
-  caption = "Zgodność metod (Korelacja Spearmana)"
-)
-res_vikor <- rozmyty_vikor(macierz_rozmyta, typy, bwm_najlepsze = bwm_best, bwm_najgorsze = bwm_worst)
-plot(res_vikor)
+# Generowanie Mapy Strategicznej VIKOR 
+plot(meta_wynik$detale_vikor) 
 
-# 6. Wizualizacja (Mapy Decyzyjne)
+# Generowanie Mapy Efektywności TOPSIS 
+plot(meta_wynik$detale_topsis)
 
-```{r, fig.width=8, fig.height=5}
-# Wyświetlenie mapy dla VIKOR
-plot(wynik_vikor)
-
-# Wyświetlenie rankingu dla TOPSIS
-plot(wynik_topsis)
-
-meta_wynik <- rozmyty_meta_ranking(
-
-macierz_decyzyjna = macierz_rozmyta,
-
-typy_kryteriow = typy,
-
-bwm_najlepsze = bwm_best,
-
-bwm_najgorsze = bwm_worst
-
-)
-
-
-# Tabela porównawcza
-
-knitr::kable(meta_wynik$porownanie, caption = "Porównanie rankingów i Konsensus")
-
-KONIEC „poradnik_mcda.Rmd”
+# Generowanie sformatowanego raportu tabelarycznego w standardzie APA  
+tabela_apa(meta_wynik)

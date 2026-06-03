@@ -1,10 +1,10 @@
-Package: SocialMediaAddictionRankR
+Package: SocialAddictionRankR
 Type: Package
-Title: SocialAddictionRankR: Pakiet R do analizy i wykazu najbardziej uzależniających platform mediów społecznościowych wśród studentów z wykorzystaniem metod FuzzyVIKOR i Fuzzy TOPSIS i Teorii Dominacji
+Title: SocialAddictionRankR: Pakiet R do tworzenia rankingów mediów społecznościowych pod kątem ich potencjału uzależniającego wśród studentów.
 Version: 0.1.0
 Author: person("Klara", "Szczerbińska", email = "klaraszczerbinska@gmail.com", role = c("aut", "cre"))
 Maintainer: Klara Szczerbińska <klara.szczerbinska@student.uj.edu.pl>
-Description: Celem projektu jest stworzenie rankingu najbardziej uzależniających platform mediów społecznościowych wśród studentów na podstawie danych z zestawu “Students Social Media Addiction” (Kaggle).
+Description: Celem projektu jest stworzenie rankingu najbardziej uzależniających platform mediów społecznościowych wśród studentów na podstawie danych z zestawu “Social Media Addiction Among Students” (Kaggle).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -19,6 +19,7 @@ Imports:
     ggrepel,
     lpSolve,
     rempsyc,
+    officer,
     flextable
 Suggests:
     knitr,
@@ -26,5 +27,5 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 Depends:
-    R (>= 3.5.0)
+  R (>= 4.0.0)
 Config/roxygen2/version: 8.0.0
